@@ -1,16 +1,18 @@
 import { createServer, ViteDevServer } from "vite";
 
-export { exec };
+killEverythingOnExit();
+exec();
 
 async function exec() {
-  const entryPath = process.argv[2]
+  console.log(process.pid);
+  const entryPath = process.argv[2];
   const cwd = process.cwd();
   const root = cwd;
   const viteDevServer = await getViteDevServer(root);
   await viteDevServer.ssrLoadModule(entryPath);
 }
 
-let _viteDevServer: ViteDevServer;
+var _viteDevServer: ViteDevServer;
 async function getViteDevServer(root: string): Promise<ViteDevServer> {
   if (!_viteDevServer) {
     _viteDevServer = await createServer({
@@ -19,4 +21,10 @@ async function getViteDevServer(root: string): Promise<ViteDevServer> {
     });
   }
   return _viteDevServer;
+}
+
+function killEverythingOnExit() {
+  process.on("exit", () => {
+    process.kill(-process.pid, "SIGKILL");
+  });
 }
