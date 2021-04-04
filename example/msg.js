@@ -1,1 +1,1 @@
-export const msg = "Hello interpreted by Vite"
+export const msg = "Hello interpreted by Vite !"
